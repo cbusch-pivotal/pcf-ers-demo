@@ -6,3 +6,5 @@
 build/
 .project
 .springBeans
+/.apt_generated/
+.cf-env.yml
