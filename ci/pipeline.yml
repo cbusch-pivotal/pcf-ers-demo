@@ -1,0 +1,72 @@
+resources:
+  - name: source-code
+    type: git
+    source:
+      uri: git@github.com:cbusch-pivotal.io/pcf-ers-demo.git
+      branch: master
+
+  - name: cf-test
+    type: cf
+    source:
+      api: {{cf-test-api}}
+      username: {{cf-test-user}}
+      password: {{cf-test-password}}
+      organization: {{cf-test-org}}
+      space: {{cf-test-space}}
+      skip_cert_check: true
+
+  - name: cf-deploy
+    type: cf
+    source:
+      api: {{cf-deploy-api}}
+      username: {{cf-deploy-user}}
+      password: {{cf-deploy-password}}
+      organization: {{cf-deploy-org}}
+      space: {{cf-deploy-space}}
+      skip_cert_check: true
+
+jobs:
+  - name: build-app
+    public: true
+    serial: true
+    plan:
+      - get: source-code
+        trigger: true
+      - task: build
+        file: source-code/ci/build.yml
+
+  - name: deploy-test
+    plan:
+      - get: build-output
+        passed: [build-app]
+      - put: cf-test-push
+        params:
+          manifest: source-code/manifest.yml
+          path: build-output/pcf-ers-demo1-0.0.1-SNAPSHOT.jar
+
+  - name: test-app
+    plan:
+      - get: build-output
+        passed: [build-app, deploy-test]
+      - task: test
+        file: source-code/ci/test.yml
+
+  - name: deploy-prod
+    serial: true
+    plan:
+      - get: build-output
+        passed: [build-app, deploy-test, test-app]
+      - task: deploy
+        file: source-code/ci/tasks/deploy.yml
+      - put: cf-deploy-push
+        params:
+          manifest: source-code/manifest.yml
+          path: build-output/pcf-ers-demo1-0.0.1-SNAPSHOT.jar
+
+  - name: finalize-prod
+    serial: true
+    plan:
+      - get: build-output
+        passed: [deploy-prod]
+      - task: final-deploy
+        file: source-code/ci/tasks/finalize-prod.yml
