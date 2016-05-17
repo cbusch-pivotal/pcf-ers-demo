@@ -56,7 +56,7 @@ jobs:
       - task: build
         file: pcf-ers-repo/ci/tasks/build.yml
       - put: app-release
-        params: {from: build-output/pcf-ers-demo-.*.jar}
+        params: {from: build-output/pcf-ers-demo-*.jar}
       - put: version
         params: { file: version/number }
 

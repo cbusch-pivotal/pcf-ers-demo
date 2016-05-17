@@ -71,9 +71,6 @@ cd $inputDir
 ./mvnw clean package -DversionNumber=$version
 
 # Copy jar file to concourse output folder
-pwd
-ls -al target
-ls -al ../$outputDir
-
-cp target/$artifactName ../$outputDir/$artifactName
+cd ..
+cp $inputDir/target/$artifactName ../$outputDir/$artifactName
 
