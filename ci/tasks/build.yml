@@ -15,7 +15,7 @@ outputs:
   - name: build-output
 
 run:
-  path: pcf-ers-demo/ci/tasks/build.sh
+  path: pcf-ers-repo/ci/tasks/build.sh
   args: [
     --input-dir, pcf-ers-rep,
     --output-dir, build-output,

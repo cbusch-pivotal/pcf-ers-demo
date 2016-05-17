@@ -15,6 +15,15 @@ resources:
       initial_version: 1.0.0
       endpoint: {{s3-endpoint}}
 
+  - name: app-release
+    type: s3
+    source:
+      bucket: {{s3-bucket-releases}}
+      regexp: pcf-ers-demo-(.*).jar
+      access_key_id: {{s3-access-key-id}}
+      secret_access_key: {{s3-secret-access-key}}
+      endpoint: {{s3-endpoint}}
+
   - name: cf-test
     type: cf
     source:
@@ -35,15 +44,6 @@ resources:
       space: {{cf-pcf1-space}}
       skip_cert_check: true
 
-  - name: app-release
-    type: s3
-    source:
-      bucket: {{s3-bucket-releases}}
-      regexp: pcf-ers-demo-(.*).jar
-      access_key_id: {{s3-access-key-id}}
-      secret_access_key: {{s3-secret-access-key}}
-      endpoint: {{s3-endpoint}}
-
 jobs:
   - name: build-app
     public: true
@@ -54,7 +54,7 @@ jobs:
       - get: version
         params: {bump: patch}
       - task: build
-        file: pcf-ers-repo/ci/build.yml
+        file: pcf-ers-repo/ci/tasks/build.yml
       - put: app-release
         params: {from: build-output/pcf-ers-demo-.*.jar}
       - put: version
