@@ -72,6 +72,8 @@ cd $inputDir
 
 # Copy jar file to concourse output folder
 pwd
-cd ..
-cp $inputDir/target/$artifactName $outputDir/$artifactName
+ls -al target
+ls -al ../$outputDir
+
+cp target/$artifactName ../$outputDir/$artifactName
 
