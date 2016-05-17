@@ -8,10 +8,18 @@ image_resource:
     tag: '8'
 
 inputs:
-  - name: source-code
+  - name: pcf-ers-repo
+  - name: version
 
 outputs:
   - name: build-output
 
 run:
-  path: source-code/ci/tasks/build.sh
+  path: pcf-ers-demo/ci/tasks/build.sh
+  args: [
+    --input-dir, pcf-ers-rep,
+    --output-dir, build-output,
+    --version-file, version/number,
+    --artifactId, pcf-ers-demo,
+    --packaging, jar
+  ]

@@ -39,7 +39,7 @@ resources:
     type: s3
     source:
       bucket: {{s3-bucket-releases}}
-      regexp: pcf-ers-demo1-(.*).jar
+      regexp: pcf-ers-demo-(.*).jar
       access_key_id: {{s3-access-key-id}}
       secret_access_key: {{s3-secret-access-key}}
       endpoint: {{s3-endpoint}}
@@ -56,44 +56,7 @@ jobs:
       - task: build
         file: pcf-ers-repo/ci/build.yml
       - put: app-release
-        params: {from: build/pcf-ers-demo1-.*.jar}
+        params: {from: build-output/pcf-ers-demo-.*.jar}
       - put: version
         params: { file: version/number }
 
-  - name: deploy-test
-    plan:
-      - get: app-release
-        passed: [build-app]
-      - get: pcf-ers-repo
-        passed: [build-app]
-      - put: cf-test
-        params:
-          manifest: pcf-ers-repo/manifest.yml
-#          path: build-output/pcf-ers-demo1-0.0.1-SNAPSHOT.jar
-
-  - name: test-app
-    plan:
-      - get: build-output
-        passed: [build-app, deploy-test]
-      - task: test
-        file: pcf-ers-repo/ci/test.yml
-
-  - name: deploy-prod
-    serial: true
-    plan:
-      - get: build-output
-        passed: [build-app, deploy-test, test-app]
-      - task: deploy
-        file: pcf-ers-repo/ci/tasks/deploy.yml
-      - put: cf-prod
-        params:
-          manifest: pcf-ers-repo/manifest.yml
-          path: build-output/pcf-ers-demo1-0.0.1-SNAPSHOT.jar
-
-  - name: finalize-prod
-    serial: true
-    plan:
-      - get: build-output
-        passed: [deploy-prod]
-      - task: final-deploy
-        file: pcf-ers-repo/ci/tasks/finalize-prod.yml
