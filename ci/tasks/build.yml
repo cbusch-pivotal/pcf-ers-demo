@@ -17,7 +17,7 @@ outputs:
 run:
   path: pcf-ers-repo/ci/tasks/build.sh
   args: [
-    --input-dir, pcf-ers-rep,
+    --input-dir, pcf-ers-repo,
     --output-dir, build-output,
     --version-file, version/number,
     --artifactId, pcf-ers-demo,
