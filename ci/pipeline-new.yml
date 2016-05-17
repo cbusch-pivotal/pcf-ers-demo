@@ -12,7 +12,7 @@ resources:
       key: current-version
       access_key_id: {{s3-access-key-id}}
       secret_access_key: {{s3-secret-access-key}}
-      initial_version: 1.0.0
+      initial_version: 0.0.1
       endpoint: {{s3-endpoint}}
 
   - name: app-release
