@@ -11,6 +11,16 @@
 	<name>pcf-ers-demo</name>
 	<description>Core PCF ERS Demo </description>
 
+	<profiles>
+		<profile>
+			<id>ci</id>
+			<properties>
+				<versionNumber>${project.version}</versionNumber>
+				<finalName>${project.artifactId}-${versionNumber}</finalName>
+			</properties>
+		</profile>
+	</profiles>
+
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
@@ -119,6 +129,7 @@
 	</dependencyManagement>
 
 	<build>
+		<finalName>${finalName}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
