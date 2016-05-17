@@ -2,12 +2,6 @@
 
 set -e -x
 
-#pushd source-code
-#  ./mvnw clean package
-#popd
-
-#cp source-code/target/pcf-ers-demo-0.0.1.jar build-output/.
-
 # FROM PCF-DEMO REPO ----
 
 # args
@@ -72,5 +66,6 @@ cd $inputDir
 
 # Copy jar file to concourse output folder
 cd ..
-cp $inputDir/target/$artifactName $outputDir/$artifactName
+mkdir $outputDir/target
+cp $inputDir/target/$artifactName $outputDir/target/$artifactName
 

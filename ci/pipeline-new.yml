@@ -56,7 +56,17 @@ jobs:
       - task: build
         file: pcf-ers-repo/ci/tasks/build.yml
       - put: app-release
-        params: { file: build-output/pcf-ers-demo-*.jar}
+        params: { file: build-output/target/pcf-ers-demo-*.jar}
       - put: version
         params: { file: version/number }
+
+  - name: deploy-test
+    plan:
+      - get: app-release
+        passed: [build-app]
+      - get: pcf-ers-repo
+        passed: [build-app]
+      - put: cf-test
+        params:
+          manifest: pcf-ers-repo/manifest.yml
 
