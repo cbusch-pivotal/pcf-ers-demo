@@ -76,7 +76,7 @@ jobs:
   - name: test-app
     plan:
       - get: pcf-ers-repo
-        passed: [build-app, deploy-test]
+        # passed: [build-app, deploy-test]
       - task: test
         file: pcf-ers-repo/ci/tasks/test.yml
 

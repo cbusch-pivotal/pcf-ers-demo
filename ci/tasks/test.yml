@@ -11,4 +11,4 @@ inputs:
   - name: pcf-ers-repo
  
 run:
-  path: source-code/ci/tasks/test.sh
+  path: pcf-ers-repo/ci/tasks/test.sh
