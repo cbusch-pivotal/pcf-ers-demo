@@ -93,10 +93,10 @@ jobs:
           manifest: prod-manifest/manifest.yml
 
   - name: finalize-blue-green
-    serial: true
+    #serial: true
     plan:
       - get: pcf-ers-repo
-        passed: [blue-deploy-prod]
+        #passed: [blue-deploy-prod]
       - task: finalize-deploy
         file: pcf-ers-repo/ci/tasks/finalize-deploy.yml
         params:
