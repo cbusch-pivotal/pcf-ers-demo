@@ -49,10 +49,11 @@ DEPLOYED_APPS=$(./cf apps | grep ${hostname} | cut -d" " -f1)
 # Map app version onto main app route and scale the app to support traffic
 # cf map-route attendees-0-0-5 cfapps.io -n attendees
 echo "map ${appName} to route ${hostname}.${CF_DOMAIN}"
-#./cf map-route $appName $CF_DOMAIN -n $hostname
+./cf map-route $appName $CF_DOMAIN -n $hostname
+
 # cf scale attendees-0-0-5 -i 2
-echo "scaling up..."
-#./cf scale $appName -i 2
+echo "scaling ${appName} up..."
+./cf scale $appName -i 2
 
 # Scale down, unmap routes, and remove old versions of app, except a basename app = attendees
 if [ ! -z "$DEPLOYED_APPS" -a "$DEPLOYED_APPS" != " " -a "$DEPLOYED_APPS" != "$appName" ]; then
@@ -62,9 +63,9 @@ if [ ! -z "$DEPLOYED_APPS" -a "$DEPLOYED_APPS" != " " -a "$DEPLOYED_APPS" != "$a
   do
     if [ ! -z "$line" -a "$line" != " " -a "$line" != "$appName" -a "$line" != "$hostname" ]; then 
       echo "Scaling down, unmapping and removing app: $line"
-      #./cf scale "$line" -i 1
-      #./cf unmap-route "$line" $CF_DOMAIN -n $hostname
-      #./cf delete "$line" -f 
+      ./cf scale "$line" -i 1
+      ./cf unmap-route "$line" $CF_DOMAIN -n $hostname
+      ./cf delete "$line" -f 
     else
       echo "Skipping $line" 
     fi
