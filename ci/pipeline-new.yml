@@ -73,3 +73,11 @@ jobs:
         params:
           manifest: prepare-manifest/manifest.yml
 
+  - name: test-app
+    plan:
+      - get: pcf-ers-repo
+        passed: [build-app, deploy-test]
+      - task: test
+        file: pcf-ers-repo/ci/tasks/test.yml
+
+

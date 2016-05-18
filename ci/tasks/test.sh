@@ -1,6 +1,7 @@
 #!/bin/bash
 
-set -e -x
+set -e 
 
-echo "Running some tests..."
+echo "**********************"
+echo "Running smoke tests..."
 

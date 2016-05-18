@@ -8,10 +8,7 @@ image_resource:
     tag: '8'
 
 inputs:
-  - name: source-code
-
-outputs:
-  - name: build-output
-
+  - name: pcf-ers-repo
+ 
 run:
   path: source-code/ci/tasks/test.sh
