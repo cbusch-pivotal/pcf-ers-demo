@@ -99,3 +99,4 @@ if [ ! -z "$hostname" ]; then
 fi
 
 cat $outputManifest
+

@@ -9,6 +9,7 @@ image_resource:
 
 params:
   CF_API_ENDPOINT:
+  CF_DOMAIN:
   CF_USER: 
   CF_PWD: 
   CF_ORG: 
@@ -17,7 +18,10 @@ params:
 
 inputs:
   - name: pcf-ers-repo
+  - name: version
 
 run:
   path: pcf-ers-repo/ci/tasks/finalize-deploy.sh
-
+  args: [
+    --version-file, version/number
+  ]
