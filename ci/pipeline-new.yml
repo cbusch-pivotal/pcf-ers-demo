@@ -50,7 +50,7 @@ jobs:
     serial: true
     plan:
       - get: pcf-ers-repo
-        trigger: true
+        #trigger: true
       - get: version
         params: {bump: patch}
       - task: build
