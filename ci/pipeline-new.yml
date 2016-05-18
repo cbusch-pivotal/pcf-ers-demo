@@ -100,10 +100,15 @@ jobs:
       - task: finalize-deploy
         file: pcf-ers-repo/ci/tasks/finalize-deploy.yml
         params:
-          CF_API_ENDPOINT: {{cf-pcf1-api}}
-          CF_USER: {{cf-pcf1-username}}
-          CF_PWD: {{cf-pcf1-password}}
-          CF_ORG: {{cf-pcf1-org}}
-          CF_SPACE: {{cf-pcf1-space}}
+          CF_API_ENDPOINT: {{cf-pws-api}}
+          CF_USER: {{cf-pws-username}}
+          CF_PWD: {{cf-pws-password}}
+          CF_ORG: {{cf-pws-org}}
+          CF_SPACE: {{cf-pws-space}}
+          #CF_API_ENDPOINT: {{cf-pcf1-api}}
+          #CF_USER: {{cf-pcf1-username}}
+          #CF_PWD: {{cf-pcf1-password}}
+          #CF_ORG: {{cf-pcf1-org}}
+          #CF_SPACE: {{cf-pcf1-space}}
 
 
