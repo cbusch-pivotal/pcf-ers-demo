@@ -13,6 +13,7 @@ params:
   PW: 
   ORG: 
   SPACE: 
+  CF_MANIFEST_HOST: attendees
 
 inputs:
   - name: pcf-ers-repo
