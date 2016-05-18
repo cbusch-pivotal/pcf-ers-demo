@@ -60,7 +60,7 @@ if [ ! -z "$DEPLOYED_APPS" -a "$DEPLOYED_APPS" != " " -a "$DEPLOYED_APPS" != "$a
 
   while read -r line 
   do
-    if [ ! -z "$line" -a "$line" != " " -a "$line" != "$appName" ]; then 
+    if [ ! -z "$line" -a "$line" != " " -a "$line" != "$appName" -a "$line" != "$hostname"]; then 
       echo "Scaling down, unmapping and removing app: $line"
       #./cf scale "$line" -i 1
       #./cf unmap-route "$line" $CF_DOMAIN -n $hostname
