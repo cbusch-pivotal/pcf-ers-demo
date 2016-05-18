@@ -46,8 +46,8 @@ resources:
 
 jobs:
   - name: build-app
-    public: true
-    serial: true
+    #public: true
+    #serial: true
     plan:
       - get: pcf-ers-repo
         trigger: true
@@ -62,11 +62,12 @@ jobs:
 
   - name: deploy-test
     plan:
-      - get: app-release
-        passed: [build-app]
-      - get: pcf-ers-repo
-        passed: [build-app]
-      - get: version
+      - aggregate:
+        - get: app-release
+          passed: [build-app]
+        - get: pcf-ers-repo
+          passed: [build-app]
+        - get: version
       - task: prepare-manifest
         file: pcf-ers-repo/ci/tasks/prepare-manifest.yml
       - put: cf-test
@@ -82,10 +83,11 @@ jobs:
 
   - name: blue-deploy-prod
     plan:
-      - get: pcf-ers-repo
-        passed: [test-app]
-      - get: app-release
-      - get: version
+      - aggregate:
+        - get: pcf-ers-repo
+          passed: [test-app]
+        - get: app-release
+        - get: version
       - task: prod-manifest
         file: pcf-ers-repo/ci/tasks/prod-manifest.yml
       - put: cf-prod
@@ -95,9 +97,10 @@ jobs:
   - name: finalize-blue-green
     serial: true
     plan:
-      - get: pcf-ers-repo
-        passed: [blue-deploy-prod]
-      - get: version
+      - aggregate:
+        - get: pcf-ers-repo
+          passed: [blue-deploy-prod]
+        - get: version
       - task: finalize-deploy
         file: pcf-ers-repo/ci/tasks/finalize-deploy.yml
         params:
