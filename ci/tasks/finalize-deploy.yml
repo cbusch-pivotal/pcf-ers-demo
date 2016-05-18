@@ -7,6 +7,13 @@ image_resource:
     repository: java
     tag: '8'
 
+params:
+  API_ENDPOINT:
+  USER: 
+  PW: 
+  ORG: 
+  SPACE: 
+
 inputs:
   - name: pcf-ers-repo
 

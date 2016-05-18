@@ -76,7 +76,7 @@ jobs:
   - name: test-app
     plan:
       - get: pcf-ers-repo
-        passed: [build-app, deploy-test]
+        passed: [deploy-test]
       - task: test
         file: pcf-ers-repo/ci/tasks/test.yml
 
@@ -99,4 +99,11 @@ jobs:
         passed: [blue-deploy-prod]
       - task: finalize-deploy
         file: pcf-ers-repo/ci/tasks/finalize-deploy.yml
+        params:
+          API_ENDPOINT: {{cf-pcf1-api}}
+          USER: {{cf-pcf1-username}}
+          PW: {{cf-pcf1-password}}
+          ORG: {{cf-pcf1-org}}
+          SPACE: {{cf-pcf1-space}}
+
 
