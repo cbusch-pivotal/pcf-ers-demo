@@ -66,7 +66,9 @@ jobs:
         passed: [build-app]
       - get: pcf-ers-repo
         passed: [build-app]
+      - task: prepare-manifest
+        file: pcf-ers-repo/ci/tasks/prepare-manifest.yml
       - put: cf-test
         params:
-          manifest: pcf-ers-repo/manifest.yml
+          manifest: prepare-manifest/manifest.yml
 
