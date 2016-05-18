@@ -17,7 +17,6 @@ curl -L "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github"
 
 ./cf login -a ${CF_API_ENDPOINT} -u ${CF_USER} -p ${CF_PWD} -o ${CF_ORG} -s ${CF_SPACE} --skip-ssl-validation
 
-./cf apps | grep ${CF_HOST} | cut -d" " -f1 > current-apps.txt
+DEPLOYED_APPS=$(./cf apps | grep ${CF_HOST} | cut -d" " -f1)
 
-cat current-apps.txt
-
+echo $DEPLOYED_APPS
