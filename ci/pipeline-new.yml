@@ -97,6 +97,7 @@ jobs:
     plan:
       - get: pcf-ers-repo
         #passed: [blue-deploy-prod]
+      - get: version
       - task: finalize-deploy
         file: pcf-ers-repo/ci/tasks/finalize-deploy.yml
         params:

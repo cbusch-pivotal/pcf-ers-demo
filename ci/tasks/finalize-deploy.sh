@@ -48,17 +48,18 @@ DEPLOYED_APPS=$(./cf apps | grep ${hostname} | cut -d" " -f1)
 
 # Map app version onto main app route and scale the app to support traffic
 # cf map-route attendees-0-0-5 cfapps.io -n attendees
-echo "map ${APP_NAME} to route ${hostname}.${CF_DOMAIN}"
-#./cf map-route $APP_NAME $CF_DOMAIN -n $hostname
+echo "map ${appName} to route ${hostname}.${CF_DOMAIN}"
+#./cf map-route $appName $CF_DOMAIN -n $hostname
 # cf scale attendees-0-0-5 -i 2
 echo "scaling up..."
-#./cf scale $APP_NAME -i 2
+#./cf scale $appName -i 2
 
 # Scale down, unmap routes, and remove old versions of app, except a basename app = attendees
 if [ ! -z "$DEPLOYED_APPS" -a "$DEPLOYED_APPS" != " " -a "$DEPLOYED_APPS" != "$appName" ]; then
   echo "Performing zero-downtime cutover to $hostname"
 
-  while read -r line do
+  while read -r line 
+  do
     if [ ! -z "$line" -a "$line" != " " -a "$line" != "$appName" ]; then 
       echo "Scaling down, unmapping and removing $line"
       #./cf scale "$line" -i 1
