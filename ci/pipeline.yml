@@ -12,7 +12,16 @@ resources:
       key: current-version
       access_key_id: {{s3-access-key-id}}
       secret_access_key: {{s3-secret-access-key}}
-      initial_version: 1.0.0
+      initial_version: 0.0.1
+      endpoint: {{s3-endpoint}}
+
+  - name: app-release
+    type: s3
+    source:
+      bucket: {{s3-bucket-releases}}
+      regexp: pcf-ers-demo-(.*).jar
+      access_key_id: {{s3-access-key-id}}
+      secret_access_key: {{s3-secret-access-key}}
       endpoint: {{s3-endpoint}}
 
   - name: cf-test
@@ -35,65 +44,78 @@ resources:
       space: {{cf-pcf1-space}}
       skip_cert_check: true
 
-  - name: app-release
-    type: s3
-    source:
-      bucket: {{s3-bucket-releases}}
-      regexp: pcf-ers-demo1-(.*).jar
-      access_key_id: {{s3-access-key-id}}
-      secret_access_key: {{s3-secret-access-key}}
-      endpoint: {{s3-endpoint}}
-
 jobs:
   - name: build-app
-    public: true
-    serial: true
+    #public: true
+    #serial: true
     plan:
+      #- aggrepate:
       - get: pcf-ers-repo
         trigger: true
       - get: version
         params: {bump: patch}
       - task: build
-        file: pcf-ers-repo/ci/build.yml
+        file: pcf-ers-repo/ci/tasks/build.yml
       - put: app-release
-        params: {from: build/pcf-ers-demo1-.*.jar}
+        params: { file: build-output/target/pcf-ers-demo-*.jar}
       - put: version
         params: { file: version/number }
 
   - name: deploy-test
     plan:
-      - get: app-release
-        passed: [build-app]
-      - get: pcf-ers-repo
-        passed: [build-app]
+      - aggregate:
+        - get: app-release
+          passed: [build-app]
+        - get: pcf-ers-repo
+        - get: version
+      - task: prepare-manifest
+        file: pcf-ers-repo/ci/tasks/prepare-manifest.yml
       - put: cf-test
         params:
-          manifest: pcf-ers-repo/manifest.yml
-#          path: build-output/pcf-ers-demo1-0.0.1-SNAPSHOT.jar
+          manifest: prepare-manifest/manifest.yml
 
   - name: test-app
     plan:
-      - get: build-output
-        passed: [build-app, deploy-test]
+      - aggregate:
+        - get: app-release
+          passed: [deploy-test]
+        - get: pcf-ers-repo
       - task: test
-        file: pcf-ers-repo/ci/test.yml
+        file: pcf-ers-repo/ci/tasks/test.yml
 
-  - name: deploy-prod
-    serial: true
+  - name: blue-deploy-prod
     plan:
-      - get: build-output
-        passed: [build-app, deploy-test, test-app]
-      - task: deploy
-        file: pcf-ers-repo/ci/tasks/deploy.yml
+      - aggregate:
+        - get: pcf-ers-repo
+        - get: version
+        - get: app-release
+          passed: [test-app]
+      - task: prod-manifest
+        file: pcf-ers-repo/ci/tasks/prod-manifest.yml
       - put: cf-prod
         params:
-          manifest: pcf-ers-repo/manifest.yml
-          path: build-output/pcf-ers-demo1-0.0.1-SNAPSHOT.jar
+          manifest: prod-manifest/manifest.yml
 
-  - name: finalize-prod
+  - name: finalize-blue-green
     serial: true
     plan:
-      - get: build-output
-        passed: [deploy-prod]
-      - task: final-deploy
-        file: pcf-ers-repo/ci/tasks/finalize-prod.yml
+      - aggregate:
+        - get: pcf-ers-repo
+          passed: [blue-deploy-prod]
+        - get: version
+      - task: finalize-deploy
+        file: pcf-ers-repo/ci/tasks/finalize-deploy.yml
+        params:
+          #CF_API_ENDPOINT: {{cf-pws-api}}
+          #CF_DOMAIN: {{cf-pws-domain}}
+          #CF_USER: {{cf-pws-username}}
+          #CF_PWD: {{cf-pws-password}}
+          #CF_ORG: {{cf-pws-org}}
+          #CF_SPACE: {{cf-pws-space}}
+          CF_API_ENDPOINT: {{cf-pcf1-api}}
+          CF_DOMAIN: {{cf-pcf1-domain}}
+          CF_USER: {{cf-pcf1-username}}
+          CF_PWD: {{cf-pcf1-password}}
+          CF_ORG: {{cf-pcf1-org}}
+          CF_SPACE: {{cf-pcf1-space}}
+

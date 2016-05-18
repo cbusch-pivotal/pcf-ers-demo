@@ -9,6 +9,7 @@ image_resource:
 
 inputs:
   - name: pcf-ers-repo
- 
+  - name: app-release 
+
 run:
   path: pcf-ers-repo/ci/tasks/test.sh
