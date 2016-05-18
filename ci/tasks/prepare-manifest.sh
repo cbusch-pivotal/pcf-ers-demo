@@ -86,11 +86,16 @@ outputManifest=$outputDir/manifest.yml
 
 cp $inputManifest $outputManifest
 
+# periods not allowed in hostname
+hostver=${version//\./-}
+
 # the path in the manifest is always relative to the manifest itself
 sed -i -- "s|path: .*$|path: $artifactName|g" $outputManifest
 
 if [ ! -z "$hostname" ]; then
-  sed -i "s|host: .*$|host: ${hostname}-${version//\./-}|g" $outputManifest
+  hostroute=${hostname}-${version//\./-}
+  sed -i -- "s|name: .*$|name: $hostroute|g" $outputManifest
+  sed -i -- "s|host: .*$|host: $hostroute|g" $outputManifest
 fi
 
 cat $outputManifest
