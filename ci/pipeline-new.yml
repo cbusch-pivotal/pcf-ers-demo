@@ -63,9 +63,10 @@ jobs:
   - name: deploy-test
     plan:
       - get: app-release
-        passed: [build-app]
+        # passed: [build-app]
       - get: pcf-ers-repo
-        passed: [build-app]
+        # passed: [build-app]
+      - get: version
       - task: prepare-manifest
         file: pcf-ers-repo/ci/tasks/prepare-manifest.yml
       - put: cf-test
