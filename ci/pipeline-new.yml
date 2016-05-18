@@ -63,9 +63,9 @@ jobs:
   - name: deploy-test
     plan:
       - get: app-release
-        # passed: [build-app]
+        passed: [build-app]
       - get: pcf-ers-repo
-        # passed: [build-app]
+        passed: [build-app]
       - get: version
       - task: prepare-manifest
         file: pcf-ers-repo/ci/tasks/prepare-manifest.yml
@@ -76,8 +76,27 @@ jobs:
   - name: test-app
     plan:
       - get: pcf-ers-repo
-        # passed: [build-app, deploy-test]
+        passed: [build-app, deploy-test]
       - task: test
         file: pcf-ers-repo/ci/tasks/test.yml
 
+  - name: blue-deploy-prod
+    plan:
+      - get: pcf-ers-repo
+        passed: [test-app]
+      - get: app-release
+      - get: version
+      - task: prod-manifest
+        file: pcf-ers-repo/ci/tasks/prod-manifest.yml
+      - put: cf-prod
+        params:
+          manifest: prod-manifest/manifest.yml
+
+  - name: finalize-blue-green
+    serial: true
+    plan:
+      - get: pcf-ers-repo
+        passed: [blue-deploy-prod]
+      - task: finalize-deploy
+        file: pcf-ers-repo/ci/tasks/finalize-deploy.yml
 

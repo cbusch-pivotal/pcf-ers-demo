@@ -8,11 +8,11 @@ image_resource:
     tag: '8'
 
 inputs:
-  - name: source-code
+  - name: pcf-ers-repo
 
 outputs:
-  - name: build-output
+  - name: finalize-prod
 
 run:
-  path: source-code/ci/tasks/finalize-prod.sh
+  path: pcf-ers-repo/ci/tasks/finalize-prod.sh
 
