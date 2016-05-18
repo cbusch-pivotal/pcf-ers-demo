@@ -17,7 +17,6 @@ params:
 inputs:
   - name: pcf-ers-repo
 
-
 run:
-  path: pcf-ers-repo/ci/tasks/finalize-prod.sh
+  path: pcf-ers-repo/ci/tasks/finalize-deploy.sh
 
