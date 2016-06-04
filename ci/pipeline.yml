@@ -46,10 +46,7 @@ resources:
 
 jobs:
   - name: build-app
-    #public: true
-    #serial: true
     plan:
-      #- aggrepate:
       - get: pcf-ers-repo
         trigger: true
       - get: version

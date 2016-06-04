@@ -13,6 +13,13 @@
 
 	<profiles>
 		<profile>
+			<id>abc</id>
+			<properties>
+				<versionNumber>${project.version}</versionNumber>
+				<finalName>${project.artifactId}-${versionNumber}</finalName>
+			</properties>
+		</profile>
+		<profile>
 			<id>ci</id>
 			<properties>
 				<versionNumber>${project.version}</versionNumber>
